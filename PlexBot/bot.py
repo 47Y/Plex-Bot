@@ -13,6 +13,7 @@ from discord.ext.commands import command
 from plexapi.exceptions import Unauthorized
 from plexapi.exceptions import NotFound
 from plexapi.server import PlexServer
+from plexapi.playqueue import PlayQueue
 
 from .exceptions import MediaNotFoundError
 from .exceptions import VoiceChannelError
@@ -630,7 +631,7 @@ class Plex(commands.Cog):
             embed, img = self._build_embed_playlist(self, playlist, "Added playlist to queue", playlist.title)
             await ctx.send(embed=embed, file=img)
 
-            for item in playlist.items():
+            for item in PlayQueue.create(self.pms, playlist.items(), shuffled=True).items:
                 if (item.TYPE == "track"):
                     await self.play_queue.put(item)
             bot_log.debug("Added to queue - %s", title)
